@@ -1,0 +1,1 @@
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/CooperativeResearchPlatform/object_detection_for_aeb/blob/main/notebooks/2-ora_nn_alapok/02_neural_network_intro.ipynb)

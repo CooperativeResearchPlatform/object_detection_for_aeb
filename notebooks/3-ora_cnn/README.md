@@ -1,0 +1,1 @@
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/CooperativeResearchPlatform/object_detection_for_aeb/blob/main/notebooks/3-ora_cnn/03_cnn_intro.ipynb)

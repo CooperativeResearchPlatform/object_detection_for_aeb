@@ -1,0 +1,1 @@
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/CooperativeResearchPlatform/object_detection_for_aeb/blob/main/notebooks/mmdetection_intro/mmdet3d_centerpoint.ipynb)

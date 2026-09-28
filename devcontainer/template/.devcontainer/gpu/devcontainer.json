@@ -1,0 +1,35 @@
+{
+    "name": "MMDetection3D GPU - training and inference",
+    "build": {
+        "dockerfile": "../Dockerfile.gpu",
+        "context": ".."
+    },
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace/mmdetection3d,type=bind",
+    "workspaceFolder": "/workspace/mmdetection3d",
+    "runArgs": [
+        "--gpus=all",
+        "--shm-size=16g"
+    ],
+    "remoteUser": "vscode",
+    "updateRemoteUserUID": true,
+    "containerEnv": {
+        "MPLCONFIGDIR": "/tmp/matplotlib-cache",
+        "MMDET3D_DEVICE": "gpu",
+        "PYTHONPATH": "/workspace/mmdetection3d",
+        "PYTHONUNBUFFERED": "1"
+    },
+    "postCreateCommand": "bash .devcontainer/post-create.sh",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "ms-toolsai.jupyter"
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": "/opt/mmdet3d-venv/bin/python",
+                "python.terminal.activateEnvironment": false
+            }
+        }
+    }
+}

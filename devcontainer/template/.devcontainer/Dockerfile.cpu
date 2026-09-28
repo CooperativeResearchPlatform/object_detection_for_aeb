@@ -1,0 +1,63 @@
+FROM python:3.10-slim
+
+ARG USERNAME=vscode
+ARG USER_UID=1000
+ARG USER_GID=1000
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1 \
+    SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True \
+    VIRTUAL_ENV=/opt/mmdet3d-venv \
+    PATH=/opt/mmdet3d-venv/bin:${PATH}
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends \
+        ca-certificates \
+        ffmpeg \
+        git \
+        libgl1 \
+        libglib2.0-0 \
+        libsm6 \
+        libxext6 \
+        libxrender1 \
+        ninja-build \
+        openssh-client \
+        sudo \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN groupadd --gid "${USER_GID}" "${USERNAME}" \
+    && useradd --uid "${USER_UID}" --gid "${USER_GID}" --create-home --shell /bin/bash "${USERNAME}" \
+    && echo "${USERNAME} ALL=(root) NOPASSWD:ALL" > "/etc/sudoers.d/${USERNAME}" \
+    && chmod 0440 "/etc/sudoers.d/${USERNAME}"
+
+RUN python -m pip install "pip<25" "setuptools==69.5.1" "packaging==24.1" wheel \
+    && python -m pip install \
+        "torch==2.1.0+cpu" \
+        "torchvision==0.16.0+cpu" \
+        --extra-index-url https://download.pytorch.org/whl/cpu \
+    && python -m pip install \
+        "numpy==1.23.5" \
+        "opencv-python==4.10.0.84" \
+        "mmengine==0.10.7" \
+    && python -m pip install \
+        "mmcv==2.1.0" \
+        --find-links https://download.openmmlab.com/mmcv/dist/cpu/torch2.1.0/index.html \
+    && python -m pip install \
+        "mmdet==3.3.0" \
+        "nuscenes-devkit==1.2.0" \
+        "lyft-dataset-sdk==0.0.8" \
+        "numba==0.57.1" \
+        "scikit-image==0.21.0" \
+        jupyterlab \
+        ipykernel \
+        open3d \
+        plyfile \
+        tensorboard \
+        trimesh \
+    && python -m venv --system-site-packages "${VIRTUAL_ENV}" \
+    && chown -R "${USERNAME}:${USERNAME}" "${VIRTUAL_ENV}" \
+    && chmod -R a+rwX "${VIRTUAL_ENV}"
+
+USER ${USERNAME}
+WORKDIR /workspace/mmdetection3d

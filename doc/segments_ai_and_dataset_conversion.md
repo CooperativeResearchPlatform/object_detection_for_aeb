@@ -8,11 +8,11 @@ Ez az útmutató egy folyamatban kezeli a LiDAR-adatok MCAP-felvételből tört�
 
 Egy mérési menethez legalább az alábbi, közös időalapot használó ROS2 topicok szükségesek:
 
-- pontfelhő: `sensor_msgs/msg/PointCloud2`;
-- ego mozgás: `nav_msgs/msg/Odometry`, vagy indokolt esetben `geometry_msgs/msg/PoseStamped`;
+- pontfelhő: a kiválasztott `/luminar_pcl` vagy `/lexus3/os_center/points` topic `sensor_msgs/msg/PointCloud2` üzenete;
+- ego mozgás: a `/novatel/oem7/odom` topic `nav_msgs/msg/Odometry` üzenete;
 - statikus LiDAR -> ego extrinsic transzformáció: TF-ből vagy külön kalibrációs fájlból.
 
-A felvétellel együtt rögzíteni kell a topicneveket, a `frame_id` értékeket, a koordinátatengelyeket, a mértékegységeket, az időbélyeg forrását és a LiDAR pontmezőinek nevét, típusát és sorrendjét. A konverzió előtt ellenőrizzétek, hogy az MCAP valóban tartalmazza a kiválasztott topicokat és a teljes mérés alatt rendelkezésre áll-e ego póz.
+A két LiDAR-forrás közül mérési menetenként dokumentáljátok, melyiket használjátok; ne keverjétek őket kalibráció és koordinátatranszformáció nélkül. A felvétellel együtt rögzíteni kell a topicneveket, a `frame_id` értékeket, a koordinátatengelyeket, a mértékegységeket, az időbélyeg forrását és a LiDAR pontmezőinek nevét, típusát és sorrendjét. A konverzió előtt ellenőrizzétek, hogy az MCAP valóban tartalmazza a kiválasztott LiDAR-topic és a `/novatel/oem7/odom` üzeneteit, valamint a teljes mérés alatt rendelkezésre áll-e ego póz.
 
 ### Kinyert pontfelhők
 

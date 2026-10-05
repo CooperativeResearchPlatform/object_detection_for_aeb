@@ -29,12 +29,12 @@ Klónozd a saját forkodat, majd ebből a kurzus-repositoryból futtasd:
 ./devcontainer/install.sh /abszolút/útvonal/mmdetection3d
 ```
 
-A telepítő kizárólag a `.devcontainer` könyvtárat másolja át, és meglévő konfigurációt nem ír felül. Ezután commitolható a forkban:
+A telepítő a `.devcontainer` könyvtárat és a `.vscode/launch.json.example` példát másolja át. Meglévő fájlt vagy könyvtárat nem ír felül, ezért a parancs ismételten is biztonságosan futtatható. Ezután a fájlok commitolhatók a forkban:
 
 ```bash
 cd /abszolút/útvonal/mmdetection3d
-git add .devcontainer
-git commit -m "Add course development container"
+git add .devcontainer .vscode/launch.json.example
+git commit -m "Add course development environment"
 ```
 
 Nyisd meg a fork gyökerét VS Code-ban, majd futtasd a **Dev Containers: Reopen in Container** parancsot. A VS Code felajánlja a CPU és GPU konfigurációt. GPU nélküli gépen válaszd az **MMDetection3D CPU - data preparation** profilt.
@@ -49,6 +49,23 @@ A Python interpreter útvonala `/opt/mmdet3d-venv/bin/python`. A VS Code ezt aut
 python .devcontainer/verify_environment.py
 python demo/pcd_demo.py --help
 ```
+
+Az adat-előkészítés, tanítás és tesztelés VS Code debuggerből is indítható. Ehhez másold a telepített példát aktív launch-konfigurációvá, majd szükség szerint módosítsd a config- és checkpoint-útvonalakat:
+
+```bash
+cp .vscode/launch.json.example .vscode/launch.json
+```
+
+A példa négy konfigurációt tartalmaz:
+
+- `tools/create_data.py` futtatása a `v1.0-mini` nuScenes adatokon;
+- `tools/misc/browse_dataset.py` futtatása a hallgatók saját dataset-configjával;
+- `tools/train.py` futtatása a CenterPoint pillar konfigurációval;
+- `tools/test.py` futtatása az előre tanított CenterPoint súlyokkal.
+
+A browse profil indításkor bekéri a saját datasetet használó config relatív útvonalát. A pontfelhőn ellenőrizni kell, hogy a ground-truth dobozok a megfelelő objektumokra esnek-e, méretük és yaw szögük helyes-e, valamint a koordinátarendszerek és pontjellemzők betöltése konzisztens-e. A profil headless konténerben a `--not-show` kapcsolót használja, és az eredményt a `work_dirs/custom_dataset_browse` könyvtárba menti; a képeket a hoston vagy VS Code-ban nyissátok meg.
+
+A tesztprofil a `checkpoints/centerpoint_pillar02_nuscenes.pth` fájlt várja. A checkpoint letöltését és pontos forrását a kurzus Colab notebookja mutatja be. A `launch.json` csak indítási beállítás, adatot és modellsúlyt nem tölt le.
 
 Példa nuScenes mini adat-előkészítésre CPU profillal:
 

@@ -1,0 +1,89 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "MMDet3D create data: nuScenes mini",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/tools/create_data.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "nuscenes",
+                "--root-path",
+                "data/nuscenes",
+                "--out-dir",
+                "data/nuscenes",
+                "--extra-tag",
+                "nuscenes",
+                "--version",
+                "v1.0-mini",
+                "--max-sweeps",
+                "5"
+            ]
+        },
+        {
+            "name": "MMDet3D browse: custom LiDAR dataset",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/tools/misc/browse_dataset.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "${input:customDatasetConfig}",
+                "--task",
+                "lidar_det",
+                "--output-dir",
+                "work_dirs/custom_dataset_browse",
+                "--not-show"
+            ]
+        },
+        {
+            "name": "MMDet3D train: CenterPoint on nuScenes mini",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/tools/train.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "configs/centerpoint/centerpoint_pillar02_second_secfpn_head-circlenms_8xb4-cyclic-20e_nus-3d.py",
+                "--work-dir",
+                "work_dirs/centerpoint_nuscenes_mini",
+                "--cfg-options",
+                "train_dataloader.dataset.metainfo.version=v1.0-mini",
+                "val_dataloader.dataset.metainfo.version=v1.0-mini",
+                "test_dataloader.dataset.metainfo.version=v1.0-mini"
+            ]
+        },
+        {
+            "name": "MMDet3D test: pretrained CenterPoint on nuScenes mini",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/tools/test.py",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "configs/centerpoint/centerpoint_pillar02_second_secfpn_head-circlenms_8xb4-cyclic-20e_nus-3d.py",
+                "checkpoints/centerpoint_pillar02_nuscenes.pth",
+                "--work-dir",
+                "work_dirs/centerpoint_nuscenes_mini_eval",
+                "--cfg-options",
+                "test_dataloader.dataset.metainfo.version=v1.0-mini",
+                "test_evaluator.data_root=data/nuscenes",
+                "test_evaluator.ann_file=data/nuscenes/nuscenes_infos_val.pkl"
+            ]
+        }
+    ],
+    "inputs": [
+        {
+            "id": "customDatasetConfig",
+            "type": "promptString",
+            "description": "A saját datasetet használó MMDetection3D config relatív útvonala",
+            "default": "configs/_base_/datasets/custom-lidar-3d.py"
+        }
+    ]
+}

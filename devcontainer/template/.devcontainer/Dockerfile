@@ -28,6 +28,7 @@ RUN apt-get update \
         tar \
         sudo \
         wget \
+        xvfb \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd --gid "${USER_GID}" "${USERNAME}" \

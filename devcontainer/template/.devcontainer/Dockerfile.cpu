@@ -23,7 +23,9 @@ RUN apt-get update \
         libxrender1 \
         ninja-build \
         openssh-client \
+        tar \
         sudo \
+        wget \
     && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd --gid "${USER_GID}" "${USERNAME}" \

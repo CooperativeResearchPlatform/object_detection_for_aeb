@@ -1,0 +1,48 @@
+perception_node:
+  ros__parameters:
+    model:
+      # Az export_centerpoint_onnx.py kimenetei. Abszolút útvonal, vagy a launch fájl
+      # alapértelmezése: <share>/perception/models/...
+      pfe_onnx: ""
+      head_onnx: ""
+      use_cuda: true
+      cpu_threads: 4
+      decode_score_threshold: 0.1
+
+    input:
+      # Modell frame = nuScenes LIDAR_TOP (x jobbra, y előre). REP-103 szenzornál (x előre): 90.
+      yaw_rotation_deg: 90.0
+      # nuScenes LiDAR ~1.84 m magasan; ha a mi LiDAR-unk h méteren van: z_offset = h - 1.84
+      z_offset_m: 0.0
+      intensity_field: "intensity"
+      # nuScenes intenzitás 0..255. Ha a driver 0..1-et ad: 255.0
+      intensity_scale: 1.0
+
+    output:
+      score_threshold: 0.3
+      # ezek a local_obstacles-be kerülnek, minden más a local_moving_objects-be
+      static_obstacle_classes: ["barrier", "traffic_cone"]
+
+    brake:
+      front_offset_m: 1.0        # szenzor -> első lökhárító
+      half_width_m: 1.2          # fél járműszélesség + ráhagyás
+      max_range_m: 40.0
+      min_score: 0.35
+      min_distance_m: 3.0
+      ttc_threshold_s: 2.0
+      max_comfort_decel: 3.0
+      use_object_velocity: false # egy sweepből a sebesség nem megbízható
+      geometric_check: true
+      sensor_height_m: 1.8
+      geometric_max_range_m: 20.0
+      min_obstacle_height_m: 0.3
+      max_obstacle_height_m: 2.5
+      min_obstacle_points: 15
+      frames_to_trigger: 2
+      frames_to_release: 5
+
+    safety:
+      pointcloud_timeout_s: 0.3
+      brake_on_timeout: true
+      ego_timeout_s: 0.5
+      fallback_ego_speed_mps: 10.0
